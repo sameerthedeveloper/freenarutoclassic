@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Video Player</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+}
+
+.video-player {
+    position: relative;
+    width: 800px;
+    margin: 50px auto;
+}
+
+video {
+    width: 100%;
+    display: block;
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+input[type="range"] {
+    width: 100px;
+    height: 10px;
+    -webkit-appearance: none;
+    background-color: #555;
+    outline: none;
+    border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <div class="video-player">
+        <video id="video" controls>
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="controls">
+            <button id="play-pause">&#9658;</button>
+            <input type="range" id="seek-bar" value="0">
+            <button id="mute">&#128266;</button>
+            <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1">
+            <button id="full-screen">&#128470;</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+<script>
+    const video = document.getElementById('video');
+const playButton = document.getElementById('play-pause');
+const seekBar = document.getElementById('seek-bar');
+const muteButton = document.getElementById('mute');
+const volumeBar = document.getElementById('volume-bar');
+const fullScreenButton = document.getElementById('full-screen');
+
+playButton.addEventListener('click', togglePlayPause);
+muteButton.addEventListener('click', toggleMute);
+fullScreenButton.addEventListener('click', toggleFullScreen);
+
+video.addEventListener('click', togglePlayPause);
+video.addEventListener('timeupdate', updateSeekBar);
+seekBar.addEventListener('input', seek);
+volumeBar.addEventListener('input', changeVolume);
+
+function togglePlayPause() {
+    if (video.paused || video.ended) {
+        video.play();
+        playButton.innerHTML = '&#10074;&#10074;'; // Pause symbol
+    } else {
+        video.pause();
+        playButton.innerHTML = '&#9658;'; // Play symbol
+    }
+}
+
+function toggleMute() {
+    if (video.muted) {
+        video.muted = false;
+        volumeBar.value = video.volume;
+        muteButton.innerHTML = '&#128266;';
+    } else {
+        video.muted = true;
+        volumeBar.value = 0;
+        muteButton.innerHTML = '&#128263;';
+    }
+}
+
+function toggleFullScreen() {
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen();
+    } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
+    }
+}
+
+function updateSeekBar() {
+    seekBar.value = video.currentTime / video.duration;
+}
+
+function seek() {
+    const seekTo = video.duration * seekBar.value;
+    video.currentTime = seekTo;
+}
+
+function changeVolume() {
+    video.volume = volumeBar.value;
+    if (video.volume === 0) {
+        muteButton.innerHTML = '&#128263;';
+    } else {
+        muteButton.innerHTML = '&#128266;';
+    }
+}
+
+</script>
+</body>
+</html>
