@@ -6,7 +6,7 @@ app = Flask(__name__)
 # Function to read video links from 'Naruto.csv'
 def read_video_links():
     video_links = []
-    with open('Naruto.csv', newline='', encoding='utf-8') as csvfile:
+    with open('naruto.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             video_links.append({"title": row[0], "url": row[1]})
